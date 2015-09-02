@@ -2820,8 +2820,10 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
             /* FREQ=YEARLY; */
             int doy = get_day_of_year(impl, year, 0, 0, NULL);
 
-            if (doy != 0)
+            if (doy != 0) {
+                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                 impl->days[days_index++] = (short)doy;
+            }
 
             break;
         }
@@ -2834,8 +2836,10 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
 
                 doy = get_day_of_year(impl, year, month, 0, NULL);
 
-                if (doy != 0)
+                if (doy != 0) {
+                    assert(days_index < ICAL_BY_YEARDAY_SIZE);
                     impl->days[days_index++] = (short)doy;
+                }
             }
             break;
         }
@@ -2848,8 +2852,10 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
 
                 doy = get_day_of_year(impl, year, 0, month_day, NULL);
 
-                if (doy != 0)
+                if (doy != 0) {
+                    assert(days_index < ICAL_BY_YEARDAY_SIZE);
                     impl->days[days_index++] = (short)doy;
+                }
             }
             break;
         }
@@ -2865,8 +2871,10 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
 
                     doy = get_day_of_year(impl, year, month, month_day, NULL);
 
-                    if (doy != 0)
+                    if (doy != 0) {
+                        assert(days_index < ICAL_BY_YEARDAY_SIZE);
                         impl->days[days_index++] = (short)doy;
+                    }
                 }
             }
 
@@ -2906,6 +2914,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
             for (i = pvl_head(days); i != 0; i = pvl_next(i)) {
                 short day = (short)(intptr_t) pvl_data(i);
 
+                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                 impl->days[days_index++] = day;
             }
 
@@ -2943,6 +2952,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                     for (set_pos_counter = 0; set_pos_counter < set_pos_total; set_pos_counter++) {
                         if (check_set_position(impl, set_pos_counter + 1) ||
                             check_set_position(impl, set_pos_counter - set_pos_total)) {
+                            assert(days_index < ICAL_BY_YEARDAY_SIZE);
                             impl->days[days_index++] = doy_offset + by_month_day[set_pos_counter];
                         }
                     }
@@ -2962,6 +2972,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                         if (pos == 0) {
                             /* Add all of instances of the weekday within the month. */
                             for (day = first_matching_day; day <= days_in_month; day += 7) {
+                                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                                 impl->days[days_index++] = (short)(doy_offset + day);
                             }
 
@@ -2969,14 +2980,18 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                             /* Add the nth instance of the weekday within the month. */
                             month_day = first_matching_day + (pos - 1) * 7;
 
-                            if (month_day <= days_in_month)
+                            if (month_day <= days_in_month) {
+                                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                                 impl->days[days_index++] = (short)(doy_offset + month_day);
+                            }
                         } else {
                             /* Add the -nth instance of the weekday within the month. */
                             month_day = last_matching_day + (pos + 1) * 7;
 
-                            if (month_day > 0)
+                            if (month_day > 0) {
+                                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                                 impl->days[days_index++] = (short)(doy_offset + month_day);
+                            }
                         }
 
                         /* Make sure the days are in chronological order */
@@ -3003,6 +3018,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                     int mday = BYMDPTR[j];
 
                     if (tt.day == mday) {
+                        assert(days_index < ICAL_BY_YEARDAY_SIZE);
                         impl->days[days_index++] = day;
                     }
                 }
@@ -3032,6 +3048,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                         int month = BYMONPTR[i];
 
                         if (tt.month == month && tt.day == mday) {
+                            assert(days_index < ICAL_BY_YEARDAY_SIZE);
                             impl->days[days_index++] = day;
                         }
                     }
@@ -3059,6 +3076,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                     int weekno = BYWEEKPTR[i];
 
                     if (weekno == this_weekno) {
+                        assert(days_index < ICAL_BY_YEARDAY_SIZE);
                         impl->days[days_index++] = day;
                     }
                 }
@@ -3084,6 +3102,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
                 tt = __icaltime_from_day_of_year(impl, day, year, NULL);
 
                 if (is_day_in_byday(impl, tt)) {
+                    assert(days_index < ICAL_BY_YEARDAY_SIZE);
                     impl->days[days_index++] = day;
                 }
             }
@@ -3093,6 +3112,7 @@ static int expand_year_days(icalrecur_iterator *impl, int year)
 
     case 1 << BY_YEAR_DAY:{
             for (j = 0; impl->by_ptrs[BY_YEAR_DAY][j] != ICAL_RECURRENCE_ARRAY_MAX; j++) {
+                assert(days_index < ICAL_BY_YEARDAY_SIZE);
                 impl->days[days_index++] = impl->by_ptrs[BY_YEAR_DAY][j];
             }
             break;
@@ -3113,7 +3133,8 @@ static int next_year(icalrecur_iterator *impl)
         return 0;
     }
 
-    if (impl->days[++impl->days_index] == ICAL_RECURRENCE_ARRAY_MAX) {
+    assert(++impl->days_index < ICAL_BY_YEARDAY_SIZE);
+    if (impl->days[impl->days_index] == ICAL_RECURRENCE_ARRAY_MAX) {
         impl->days_index = 0;
 
         for (;;) {
