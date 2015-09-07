@@ -323,6 +323,7 @@ add_subdirectory(scripts)
 add_subdirectory(test-data)
 add_subdirectory(src)
 add_subdirectory(examples)
+add_subdirectory(afl)
 if(USE_BUILTIN_TZDATA)
   # use our zoneinfo if cmake is passed -DUSE_BUILTIN_TZDATA
   add_subdirectory(zoneinfo)
