@@ -211,7 +211,7 @@ static icalrecurrencetype_frequency icalrecur_string_to_freq(const char *str)
     return ICAL_NO_RECURRENCE;
 }
 
-static const char *icalrecur_freq_to_string(icalrecurrencetype_frequency kind)
+const char *icalrecur_freq_to_string(icalrecurrencetype_frequency kind)
 {
     int i;
 
@@ -272,7 +272,7 @@ static struct wd_map
     {ICAL_NO_WEEKDAY, 0}
 };
 
-static const char *icalrecur_weekday_to_string(icalrecurrencetype_weekday kind)
+const char *icalrecur_weekday_to_string(icalrecurrencetype_weekday kind)
 {
     int i;
 
