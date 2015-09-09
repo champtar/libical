@@ -211,6 +211,10 @@ LIBICAL_ICAL_EXPORT char *icalrecurrencetype_as_string(struct icalrecurrencetype
 
 LIBICAL_ICAL_EXPORT char *icalrecurrencetype_as_string_r(struct icalrecurrencetype *recur);
 
+LIBICAL_ICAL_EXPORT const char *icalrecur_freq_to_string(icalrecurrencetype_frequency kind);
+
+LIBICAL_ICAL_EXPORT const char *icalrecur_weekday_to_string(icalrecurrencetype_weekday kind);
+
 /** Recurrence iteration routines */
 
 typedef struct icalrecur_iterator_impl icalrecur_iterator;
